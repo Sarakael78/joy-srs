@@ -3,17 +3,34 @@ Main FastAPI application for the Legal Strategy Infographics Platform.
 """
 
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Security
+security = HTTPBearer()
+
+# Simple API key authentication
+API_KEY = os.getenv("API_KEY", "your-secret-api-key-here")
+
+def verify_api_key(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Verify API key for protected endpoints."""
+    if credentials.credentials != API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API key"
+        )
+    return credentials.credentials
 
 
 @asynccontextmanager
@@ -21,7 +38,7 @@ async def lifespan(app: FastAPI):
     """Application lifespan manager."""
     # Startup
     logger.info("Starting Legal Strategy Infographics Platform")
-    logger.info("Running in serverless mode")
+    logger.info("Running in serverless mode with API key authentication")
     
     yield
     
@@ -58,7 +75,7 @@ def create_app() -> FastAPI:
             "timestamp": "2024-01-01T00:00:00Z",
         }
     
-    # Root endpoint - serve infographic
+    # Root endpoint - serve infographic (public)
     @app.get("/", response_class=HTMLResponse)
     async def root():
         """Serve the main infographic HTML file."""
@@ -96,6 +113,28 @@ def create_app() -> FastAPI:
             
         except Exception as e:
             logger.error(f"Error serving public infographic: {str(e)}")
+            raise HTTPException(status_code=500, detail="Internal server error")
+    
+    # Protected infographic endpoint
+    @app.get("/infographics/", response_class=HTMLResponse)
+    async def protected_infographic(api_key: str = Depends(verify_api_key)):
+        """Serve the infographic HTML file with API key authentication."""
+        try:
+            logger.info("Protected infographic accessed with valid API key")
+            
+            infographic_path = Path("public/infographic.html")
+            if not infographic_path.exists():
+                raise HTTPException(
+                    status_code=404, detail="Infographic file not found"
+                )
+            
+            with open(infographic_path, "r", encoding="utf-8") as f:
+                html_content = f.read()
+            
+            return HTMLResponse(content=html_content)
+            
+        except Exception as e:
+            logger.error(f"Error serving protected infographic: {str(e)}")
             raise HTTPException(status_code=500, detail="Internal server error")
     
     # Global exception handler
