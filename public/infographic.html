@@ -674,13 +674,19 @@
           } catch (e) {
             // Fallback: try to get username from URL params or localStorage
             const urlParams = new URLSearchParams(window.location.search);
-            const username = urlParams.get('username') || localStorage.getItem('username') || "User";
+            const username =
+              urlParams.get("username") ||
+              localStorage.getItem("username") ||
+              "User";
             return { name: username, role: "user" };
           }
         }
         // Fallback: try to get username from URL params or localStorage
         const urlParams = new URLSearchParams(window.location.search);
-        const username = urlParams.get('username') || localStorage.getItem('username') || "User";
+        const username =
+          urlParams.get("username") ||
+          localStorage.getItem("username") ||
+          "User";
         return { name: username, role: "user" };
       }
 

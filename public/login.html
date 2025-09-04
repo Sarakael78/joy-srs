@@ -131,7 +131,10 @@
               localStorage.setItem("authToken", token);
               localStorage.setItem("username", username);
               window.location.href =
-                "/infographic?token=" + encodeURIComponent(token) + "&username=" + encodeURIComponent(username);
+                "/infographic?token=" +
+                encodeURIComponent(token) +
+                "&username=" +
+                encodeURIComponent(username);
             } else {
               const errorData = await response.json();
               errorMessage.textContent =
