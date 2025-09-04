@@ -108,26 +108,17 @@
           // Clear previous messages
           errorMessage.style.display = "none";
           successMessage.style.display = "none";
-          errorMessage.classList.add("hidden");
-          successMessage.classList.add("hidden");
 
           // Disable button
           loginBtn.disabled = true;
-          loginBtn.innerHTML = `
-                <div class="flex items-center justify-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Signing In...
-                </div>`;
+          loginBtn.textContent = "Logging in...";
 
           try {
             const formData = new FormData();
             formData.append("username", username);
             formData.append("password", password);
 
-            const response = await fetch("/auth/token", {
+            const response = await fetch("/auth/login", {
               method: "POST",
               body: formData,
             });
@@ -136,25 +127,20 @@
               const data = await response.json();
               const token = data.access_token;
 
-              // Store token and redirect
+              // Store token and redirect with token as query parameter
               localStorage.setItem("authToken", token);
-              successMessage.textContent = "Success! Redirecting...";
-              successMessage.style.display = "block";
-              successMessage.classList.remove("hidden");
-              window.location.href = "/";
+              window.location.href =
+                "/infographic?token=" + encodeURIComponent(token);
             } else {
               const errorData = await response.json();
               errorMessage.textContent =
                 errorData.detail ||
                 "Login failed. Please check your credentials.";
               errorMessage.style.display = "block";
-              errorMessage.classList.remove("hidden");
             }
           } catch (error) {
-            errorMessage.textContent =
-              "A network error occurred. Please try again.";
+            errorMessage.textContent = "Network error. Please try again.";
             errorMessage.style.display = "block";
-            errorMessage.classList.remove("hidden");
           } finally {
             // Re-enable button
             loginBtn.disabled = false;
@@ -162,20 +148,19 @@
           }
         });
 
-      // On page load, check if we have a stored token and redirect
+      // Check if we have a stored token
       window.addEventListener("load", function () {
         const storedToken = localStorage.getItem("authToken");
         if (storedToken) {
-          // Optionally, you could verify the token here before redirecting
           const successMessage = document.getElementById("successMessage");
-          successMessage.innerHTML = `<strong>Already logged in.</strong> Redirecting...`;
+          successMessage.innerHTML = `
+                <strong>🔑 Token found!</strong><br>
+                Click below to access the infographic.<br><br>
+                <button onclick="window.location.href='/infographic?token=' + encodeURIComponent('${storedToken}')" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">
+                    Access Infographic
+                </button>
+            `;
           successMessage.style.display = "block";
-          successMessage.classList.remove("hidden");
-
-          // Redirect to the main page after a short delay
-          setTimeout(() => {
-            window.location.href = "/";
-          }, 1000);
         }
       });
     </script>
