@@ -169,8 +169,16 @@ push_to_github() {
         fi
         
         # Create the repository
-        if gh repo create Sarakael78/joy-srs --public --source=. --remote=origin --push; then
-            print_success "Successfully created and pushed to GitHub repository"
+        if gh repo create Sarakael78/joy-srs --public --source=.; then
+            print_success "Successfully created GitHub repository"
+            # Update remote URL and push
+            git remote set-url origin https://github.com/Sarakael78/joy-srs.git
+            if git push -u origin "$current_branch"; then
+                print_success "Successfully pushed to GitHub repository"
+            else
+                print_error "Failed to push to GitHub repository"
+                exit 1
+            fi
         else
             print_error "Failed to create GitHub repository"
             echo "Please create the repository manually at: https://github.com/Sarakael78/joy-srs"
