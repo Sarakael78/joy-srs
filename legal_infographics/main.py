@@ -134,6 +134,26 @@ def create_app() -> FastAPI:
             )
         return {"username": username}
     
+    # Login page endpoint (public)
+    @app.get("/login", response_class=HTMLResponse)
+    async def login_page():
+        """Serve the login page."""
+        try:
+            login_path = Path("public/login.html")
+            if not login_path.exists():
+                raise HTTPException(
+                    status_code=404, detail="Login page not found"
+                )
+            
+            with open(login_path, "r", encoding="utf-8") as f:
+                html_content = f.read()
+            
+            return HTMLResponse(content=html_content)
+            
+        except Exception as e:
+            logger.error(f"Error serving login page: {str(e)}")
+            raise HTTPException(status_code=500, detail="Internal server error")
+    
     # Root endpoint - serve infographic (protected)
     @app.get("/", response_class=HTMLResponse)
     async def root(credentials: HTTPAuthorizationCredentials = Depends(security)):

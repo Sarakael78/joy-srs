@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Legal Strategy Infographics</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        .login-header p {
+            color: #666;
+            margin: 0.5rem 0 0 0;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .success-message {
+            background: #efe;
+            color: #363;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .instructions h3 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        
+        .instructions ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .instructions li {
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>🔐 Legal Strategy Infographics</h1>
+            <p>Please login to access the infographic</p>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                Login
+            </button>
+        </form>
+        
+        <div class="instructions">
+            <h3>📋 How to Access:</h3>
+            <ul>
+                <li>Enter your username and password</li>
+                <li>Click "Login" to get your access token</li>
+                <li>Copy the token and use it in your browser's Authorization header</li>
+                <li>Or use the "Access Infographic" button after successful login</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Clear previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Disable button
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            
+            try {
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
+                
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const token = data.access_token;
+                    
+                    // Show success message with token
+                    successMessage.innerHTML = `
+                        <strong>✅ Login successful!</strong><br>
+                        <strong>Token:</strong> ${token}<br><br>
+                        <button onclick="accessInfographic('${token}')" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 3px; cursor: pointer;">
+                            Access Infographic
+                        </button>
+                    `;
+                    successMessage.style.display = 'block';
+                    
+                    // Store token in localStorage for convenience
+                    localStorage.setItem('authToken', token);
+                    
+                } else {
+                    const errorData = await response.json();
+                    errorMessage.textContent = errorData.detail || 'Login failed. Please check your credentials.';
+                    errorMessage.style.display = 'block';
+                }
+                
+            } catch (error) {
+                errorMessage.textContent = 'Network error. Please try again.';
+                errorMessage.style.display = 'block';
+            } finally {
+                // Re-enable button
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Login';
+            }
+        });
+        
+        function accessInfographic(token) {
+            // Create a new window/tab with the infographic
+            const newWindow = window.open('/', '_blank');
+            
+            // Note: Due to browser security restrictions, we can't automatically
+            // set the Authorization header for the new window. Users will need
+            // to manually add the header or use a browser extension.
+            
+            // Show instructions
+            alert(`To access the infographic:\n\n1. In the new tab, open Developer Tools (F12)\n2. Go to Network tab\n3. Right-click on the request to '/' and select "Block request URL"\n4. Add a new request with Authorization header: Bearer ${token}\n\nOr use a browser extension like "ModHeader" to add the Authorization header.`);
+        }
+        
+        // Check if we have a stored token
+        window.addEventListener('load', function() {
+            const storedToken = localStorage.getItem('authToken');
+            if (storedToken) {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.innerHTML = `
+                    <strong>🔑 Token found!</strong><br>
+                    <strong>Token:</strong> ${storedToken}<br><br>
+                    <button onclick="accessInfographic('${storedToken}')" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 3px; cursor: pointer;">
+                        Access Infographic
+                    </button>
+                `;
+                successMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
