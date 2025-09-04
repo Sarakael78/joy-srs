@@ -13,15 +13,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.security import HTTPBearer
 
-from .api import (
-    audit_router,
-    auth_router,
-    cases_router,
-    infographics_router,
-    users_router,
-)
 from .config import settings
-from .database import get_db, init_db
 from .middleware import AuditMiddleware, RateLimitMiddleware, SecurityMiddleware
 from .utils.logging import setup_logging
 
@@ -38,12 +30,7 @@ async def lifespan(app: FastAPI):
     """Application lifespan manager."""
     # Startup
     logger.info("Starting Legal Strategy Infographics Platform")
-    try:
-        await init_db()
-        logger.info("Database initialized successfully")
-    except Exception as e:
-        logger.warning(f"Database initialization failed: {e}")
-        logger.info("Running in serverless mode without database")
+    logger.info("Running in serverless mode without database")
     
     yield
     
@@ -83,14 +70,12 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Include routers
-    app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
-    app.include_router(
-        infographics_router, prefix="/infographics", tags=["Infographics"]
-    )
-    app.include_router(cases_router, prefix="/cases", tags=["Cases"])
-    app.include_router(users_router, prefix="/users", tags=["Users"])
-    app.include_router(audit_router, prefix="/audit", tags=["Audit"])
+    # Include routers (simplified for serverless deployment)
+    # app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+    # app.include_router(infographics_router, prefix="/infographics", tags=["Infographics"])
+    # app.include_router(cases_router, prefix="/cases", tags=["Cases"])
+    # app.include_router(users_router, prefix="/users", tags=["Users"])
+    # app.include_router(audit_router, prefix="/audit", tags=["Audit"])
 
     # Health check endpoint
     @app.get("/health", tags=["Health"])
@@ -114,7 +99,7 @@ def create_app() -> FastAPI:
             "cases_total": 0,
         }
 
-    # Root endpoint - serve infographic
+        # Root endpoint - serve infographic
     @app.get("/", response_class=HTMLResponse)
     async def root():
         """Serve the main infographic HTML file."""
@@ -124,14 +109,34 @@ def create_app() -> FastAPI:
                 raise HTTPException(
                     status_code=404, detail="Infographic file not found"
                 )
-
+            
             with open(infographic_path, "r", encoding="utf-8") as f:
                 html_content = f.read()
-
+            
             return HTMLResponse(content=html_content)
-
+            
         except Exception as e:
             logger.error(f"Error serving infographic: {str(e)}")
+            raise HTTPException(status_code=500, detail="Internal server error")
+    
+    # Public infographic endpoint
+    @app.get("/infographics/public", response_class=HTMLResponse)
+    async def public_infographic():
+        """Serve the infographic HTML file without authentication."""
+        try:
+            infographic_path = Path("public/infographic.html")
+            if not infographic_path.exists():
+                raise HTTPException(
+                    status_code=404, detail="Infographic file not found"
+                )
+            
+            with open(infographic_path, "r", encoding="utf-8") as f:
+                html_content = f.read()
+            
+            return HTMLResponse(content=html_content)
+            
+        except Exception as e:
+            logger.error(f"Error serving public infographic: {str(e)}")
             raise HTTPException(status_code=500, detail="Internal server error")
 
     # Global exception handler
