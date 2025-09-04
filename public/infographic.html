@@ -52,111 +52,26 @@
     <style>
       body {
         font-family: "Inter", sans-serif;
-        background-color: #111827; /* Dark background */
-        color: #333333; /* Keep original text color */
-      }
-      .tab-active {
-        background-color: #41824a;
-        color: #ffffff;
-        border-color: #41824a;
-      }
-      .tab-inactive {
-        background-color: transparent;
-        color: #41824a;
-        border-color: transparent;
-      }
-      .tab-inactive:hover {
-        background-color: #e8f5e9;
-        border-color: #41824a;
-      }
-      .diagram-box {
-        border: 2px solid #a5d6a7;
-        background-color: #ffffff;
-        padding: 1.25rem;
-        border-radius: 0.75rem;
-        text-align: center;
-        flex-grow: 1;
-        min-width: 160px;
-        transition: all 0.2s ease-in-out;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
-          0 2px 4px -1px rgba(0, 0, 0, 0.03);
-      }
-      .diagram-box:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-          0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      }
-      .diagram-arrow {
-        font-size: 2rem;
-        color: #41824a;
-        line-height: 1;
-        font-weight: 600;
-      }
-      .risk-low {
-        background-color: #c8e6c9;
-        color: #166534;
-      }
-      .risk-medium {
-        background-color: #fef08a;
-        color: #854d0e;
-      }
-      /* User Menu Styles */
-      .user-menu {
-        position: relative;
-        display: inline-block;
-      }
-      .user-menu-content {
-        display: none;
-        position: absolute;
-        right: 0;
-        background-color: #ffffff;
-        min-width: 220px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        border-radius: 0.75rem;
-        border: 1px solid #e5e7eb;
-        z-index: 1000;
-        overflow: hidden;
-      }
-      .user-menu-content.show {
-        display: block;
-      }
-      .user-menu-item {
-        color: #374151;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        border-bottom: 1px solid #f3f4f6;
-        transition: background-color 0.2s;
-      }
-      .user-menu-item:hover {
-        background-color: #f9fafb;
-      }
-      .user-menu-item:last-child {
-        border-bottom: none;
-      }
-      .user-menu-item.danger {
-        color: #dc2626;
-      }
-      .user-menu-item.danger:hover {
-        background-color: #fef2f2;
       }
       .gradient-text {
-        background: linear-gradient(to right, #41824a, #2a4b7c);
+        background: linear-gradient(
+          to right,
+          #41824a,
+          #60a5fa
+        ); /* Adjusted blue for better visibility */
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
       }
     </style>
   </head>
-  <body class="antialiased">
+  <body class="antialiased bg-[#1E293B] text-gray-300">
     <div class="container mx-auto px-4 py-8 md:py-12">
       <div class="absolute top-6 right-6 z-50">
-        <div class="user-menu">
+        <div class="relative">
           <button
             id="userMenuBtn"
-            class="bg-white p-3 rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#41824A]"
+            class="bg-slate-700 p-3 rounded-full shadow-lg border border-slate-600 hover:shadow-xl transition-shadow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#41824A] focus:ring-offset-slate-800"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -173,57 +88,73 @@
               />
             </svg>
           </button>
-          <div id="userMenuContent" class="user-menu-content">
-            <div class="px-4 py-3 border-b border-gray-200">
-              <p class="text-sm font-semibold text-gray-800">Welcome</p>
-              <p class="text-sm text-gray-600 truncate" id="userName">User</p>
-            </div>
-            <a
-              href="#"
-              class="user-menu-item"
-              id="documentsLink"
-              style="display: none"
+          <div
+            id="userMenuContent"
+            class="hidden absolute right-0 mt-2 w-56 origin-top-right bg-slate-800 rounded-lg shadow-lg border border-slate-700 ring-1 ring-black ring-opacity-5 z-50"
+          >
+            <div
+              class="py-1"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="options-menu"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
+              <div class="px-4 py-3 border-b border-slate-700">
+                <p class="text-sm font-semibold text-gray-200">Welcome</p>
+                <p class="text-sm text-gray-400 truncate" id="userName">User</p>
+              </div>
+              <a
+                href="#"
+                id="documentsLink"
+                style="display: none"
+                class="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-slate-700"
+                role="menuitem"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-                />
-              </svg>
-              Documents Library
-            </a>
-            <a href="#" class="user-menu-item danger" id="logoutBtn">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                  />
+                </svg>
+                Documents Library
+              </a>
+              <a
+                href="#"
+                id="logoutBtn"
+                class="flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-slate-700"
+                role="menuitem"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              Log Out
-            </a>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                Log Out
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
       <header class="text-center mb-12 md:mb-16">
         <div
-          class="inline-block bg-white p-3 rounded-xl shadow-md border border-gray-200 mb-6"
+          class="inline-block bg-slate-800 p-3 rounded-xl shadow-md border border-slate-700 mb-6"
         >
           <img
             src="logo.jpg"
@@ -232,11 +163,11 @@
           />
         </div>
         <h1
-          class="text-4xl md:text-6xl font-extrabold text-[#2A4B7C] mb-2 tracking-tight"
+          class="text-4xl md:text-6xl font-extrabold text-white mb-2 tracking-tight"
         >
           Legal Analysis
         </h1>
-        <p class="text-lg md:text-xl text-gray-600">
+        <p class="text-lg md:text-xl text-gray-400">
           Joy Mila Enterprises (Pty) Ltd vs. SSA Investments (Pty) Ltd
         </p>
       </header>
@@ -244,21 +175,21 @@
       <main class="space-y-16">
         <section
           id="overview"
-          class="mb-12 md:mb-16 bg-white p-8 rounded-2xl shadow-lg border border-gray-200"
+          class="mb-12 md:mb-16 bg-slate-800/50 p-8 rounded-2xl shadow-lg border border-slate-700"
         >
           <div class="text-center">
             <p
-              class="text-md text-gray-500 mb-2 uppercase tracking-widest font-semibold"
+              class="text-md text-gray-400 mb-2 uppercase tracking-widest font-semibold"
             >
               Amount Claimed
             </p>
             <p
-              class="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#41824a] to-[#2A4B7C]"
+              class="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#41824a] to-blue-400"
             >
               R446,846.70
             </p>
             <p
-              class="mt-6 text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed"
+              class="mt-6 text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed"
             >
               This strategic dashboard details our clear path to victory. Our
               case is built on a foundation of solid evidence, allowing us to
@@ -276,33 +207,35 @@
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <div
-              class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 border-t-4 border-[#41824a] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+              class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 border-t-4 border-[#41824a] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:border-[#41824a]"
             >
-              <h3 class="text-2xl font-bold mb-3 text-[#2A4B7C]">
+              <h3 class="text-2xl font-bold mb-3 text-white">
                 Jurisdictional Challenge
               </h3>
-              <p class="text-gray-600 leading-relaxed">
-                <strong>Anticipated Move:</strong> The Defendant will likely
-                file a Special Plea, arguing the case belongs in Cape Town.
-                <br /><br />
-                <strong>Our Unbeatable Counter:</strong> We will prove
-                conclusively that the cause of action—both performance and
-                payment—is anchored firmly in Gqeberha, making this the only
-                correct forum.
+              <p class="text-gray-400 leading-relaxed">
+                <strong class="text-gray-300">Anticipated Move:</strong>
+                The Defendant will likely file a Special Plea, arguing the case
+                belongs in Cape Town. <br /><br />
+                <strong class="text-gray-300">Our Unbeatable Counter:</strong>
+                We will prove conclusively that the cause of action—both
+                performance and payment—is anchored firmly in Gqeberha, making
+                this the only correct forum.
               </p>
             </div>
             <div
-              class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 border-t-4 border-[#41824a] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2"
+              class="bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-700 border-t-4 border-[#41824a] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:border-[#41824a]"
             >
-              <h3 class="text-2xl font-bold mb-3 text-[#2A4B7C]">
+              <h3 class="text-2xl font-bold mb-3 text-white">
                 Defence on the Merits
               </h3>
-              <p class="text-gray-600 leading-relaxed">
-                <strong>Anticipated Move:</strong> The Defendant will deny the
-                oral agreement and dispute our performance. <br /><br />
-                <strong>Our Ironclad Proof:</strong> We will construct an
-                undeniable evidentiary record, corroborating every facet of our
-                claim and leaving no room for doubt.
+              <p class="text-gray-400 leading-relaxed">
+                <strong class="text-gray-300">Anticipated Move:</strong>
+                The Defendant will deny the oral agreement and dispute our
+                performance. <br /><br />
+                <strong class="text-gray-300">Our Ironclad Proof:</strong>
+                We will construct an undeniable evidentiary record,
+                corroborating every facet of our claim and leaving no room for
+                doubt.
               </p>
             </div>
           </div>
@@ -310,7 +243,7 @@
 
         <section
           id="deep-dive"
-          class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-200"
+          class="bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-700"
         >
           <h2
             class="text-3xl md:text-4xl font-bold text-center mb-8 gradient-text"
@@ -318,17 +251,17 @@
             The Core Arguments: Jurisdiction & Merits
           </h2>
           <div
-            class="flex justify-center bg-gray-100 p-1.5 rounded-xl max-w-md mx-auto mb-8"
+            class="flex justify-center bg-slate-900 p-1.5 rounded-xl max-w-md mx-auto mb-8"
           >
             <button
               id="tab-jurisdiction"
-              class="tab-active w-1/2 text-sm md:text-base font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors"
+              class="w-1/2 text-sm md:text-base font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors bg-[#41824a] text-white"
             >
               Securing Jurisdiction
             </button>
             <button
               id="tab-merits"
-              class="tab-inactive w-1/2 text-sm md:text-base font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors"
+              class="w-1/2 text-sm md:text-base font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors text-gray-300 hover:bg-slate-700"
             >
               Proving the Merits
             </button>
@@ -336,7 +269,7 @@
 
           <div id="content-jurisdiction">
             <p
-              class="text-center text-gray-600 mb-10 max-w-3xl mx-auto text-lg"
+              class="text-center text-gray-400 mb-10 max-w-3xl mx-auto text-lg"
             >
               Our argument for jurisdiction in Gqeberha is not just strong; it's
               legally irrefutable.
@@ -344,25 +277,39 @@
             <div
               class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-2 p-4"
             >
-              <div class="diagram-box">
-                <p class="font-bold text-lg text-[#2A4B7C]">Performance</p>
-                <p class="text-sm text-gray-600">
+              <div
+                class="bg-slate-900/50 p-5 rounded-lg border border-slate-700 text-center flex-grow min-w-[160px]"
+              >
+                <p class="font-bold text-lg text-white">Performance</p>
+                <p class="text-sm text-gray-400">
                   All 41 deliveries occurred in
                 </p>
                 <p class="font-bold text-[#41824a] text-xl">Gqeberha</p>
               </div>
-              <div class="diagram-arrow transform rotate-90 md:rotate-0">+</div>
-              <div class="diagram-box">
-                <p class="font-bold text-lg text-[#2A4B7C]">Payment</p>
-                <p class="text-sm text-gray-600">
+              <div
+                class="text-2xl font-semibold text-[#41824a] transform rotate-90 md:rotate-0 mx-4"
+              >
+                +
+              </div>
+              <div
+                class="bg-slate-900/50 p-5 rounded-lg border border-slate-700 text-center flex-grow min-w-[160px]"
+              >
+                <p class="font-bold text-lg text-white">Payment</p>
+                <p class="text-sm text-gray-400">
                   Common law dictates payment is due at the creditor's business
                   in
                 </p>
                 <p class="font-bold text-[#41824a] text-xl">Gqeberha</p>
               </div>
-              <div class="diagram-arrow transform rotate-90 md:rotate-0">→</div>
-              <div class="diagram-box bg-[#41824a] text-white border-[#166534]">
-                <p class="font-bold text-lg">Conclusion</p>
+              <div
+                class="text-2xl font-semibold text-[#41824a] transform rotate-90 md:rotate-0 mx-4"
+              >
+                →
+              </div>
+              <div
+                class="bg-[#41824a] p-5 rounded-lg border border-green-400 text-center flex-grow min-w-[160px]"
+              >
+                <p class="font-bold text-lg text-white">Conclusion</p>
                 <p class="text-sm text-white/90">
                   The cause of action arose here, locking jurisdiction in the
                 </p>
@@ -373,47 +320,53 @@
 
           <div id="content-merits" class="hidden">
             <p
-              class="text-center text-gray-600 mb-10 max-w-3xl mx-auto text-lg"
+              class="text-center text-gray-400 mb-10 max-w-3xl mx-auto text-lg"
             >
               We will systematically dismantle the defence by presenting a
               comprehensive wall of evidence for each element of our claim.
             </p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
-                <h4 class="font-bold text-[#2A4B7C]">
-                  1. Proving the Agreement
-                </h4>
-                <p class="text-sm text-gray-600 mt-1">
+              <div
+                class="p-5 rounded-lg bg-slate-900/50 border border-slate-700"
+              >
+                <h4 class="font-bold text-white">1. Proving the Agreement</h4>
+                <p class="text-sm text-gray-400 mt-1">
                   Witness testimony, communications, and the undisputed course
                   of dealing prove the contract's existence.
                 </p>
               </div>
-              <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
-                <h4 class="font-bold text-[#2A4B7C]">2. Proving Authority</h4>
-                <p class="text-sm text-gray-600 mt-1">
+              <div
+                class="p-5 rounded-lg bg-slate-900/50 border border-slate-700"
+              >
+                <h4 class="font-bold text-white">2. Proving Authority</h4>
+                <p class="text-sm text-gray-400 mt-1">
                   We will establish Mr Xhonxa's authority through his actions
                   and the company's acceptance of deliveries.
                 </p>
               </div>
-              <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
-                <h4 class="font-bold text-[#2A4B7C]">3. Proving the Terms</h4>
-                <p class="text-sm text-gray-600 mt-1">
+              <div
+                class="p-5 rounded-lg bg-slate-900/50 border border-slate-700"
+              >
+                <h4 class="font-bold text-white">3. Proving the Terms</h4>
+                <p class="text-sm text-gray-400 mt-1">
                   The 30-day payment term is consistently evidenced by our
                   invoices and the established business relationship.
                 </p>
               </div>
               <div
-                class="p-5 rounded-lg bg-gray-50 border border-gray-200 sm:col-span-2 lg:col-span-1"
+                class="p-5 rounded-lg bg-slate-900/50 border border-slate-700 sm:col-span-2 lg:col-span-1"
               >
-                <h4 class="font-bold text-[#2A4B7C]">4. Proving Performance</h4>
-                <p class="text-sm text-gray-600 mt-1">
+                <h4 class="font-bold text-white">4. Proving Performance</h4>
+                <p class="text-sm text-gray-400 mt-1">
                   Each of the 41 deliveries is proven with a corresponding
                   signed delivery note—an unbroken chain of evidence.
                 </p>
               </div>
-              <div class="p-5 rounded-lg bg-gray-50 border border-gray-200">
-                <h4 class="font-bold text-[#2A4B7C]">5. Proving the Quantum</h4>
-                <p class="text-sm text-gray-600 mt-1">
+              <div
+                class="p-5 rounded-lg bg-slate-900/50 border border-slate-700"
+              >
+                <h4 class="font-bold text-white">5. Proving the Quantum</h4>
+                <p class="text-sm text-gray-400 mt-1">
                   Our complete set of invoices provides a clear, auditable trail
                   to the final amount claimed.
                 </p>
@@ -424,88 +377,108 @@
 
         <section id="defence_strategy_analysis">
           <div
-            class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-200"
+            class="bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8 border border-slate-700"
           >
             <h2
               class="text-3xl sm:text-4xl font-bold text-center gradient-text mb-2"
             >
               Anticipated Defence: Risk Analysis
             </h2>
-            <p class="text-center text-lg text-gray-600 mb-10">
+            <p class="text-center text-lg text-gray-400 mb-10">
               A clear-eyed assessment of the Defendant's likely arguments—and
               why they will fail.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-                <h3 class="text-xl font-bold text-[#2A4B7C] mb-3">
+              <div
+                class="border border-slate-700 rounded-xl p-5 bg-slate-900/50"
+              >
+                <h3 class="text-xl font-bold text-white mb-3">
                   Jurisdictional Challenge
                 </h3>
-                <p class="text-gray-600 mb-4">
+                <p class="text-gray-400 mb-4">
                   Defendant will argue the case belongs in Cape Town. This is a
                   procedural tactic, not a substantive defence.
                 </p>
                 <div
-                  class="flex justify-between items-center text-sm font-semibold"
+                  class="flex justify-between items-center text-sm font-semibold text-gray-300"
                 >
                   <span>Risk to Plaintiff:</span>
-                  <span class="px-3 py-1 rounded-full risk-low">Low</span>
+                  <span
+                    class="px-3 py-1 rounded-full bg-green-500/10 text-green-300"
+                    >Low</span
+                  >
                 </div>
                 <p class="text-xs text-gray-500 mt-2">
                   A successful plea (unlikely) only causes delay and increases
                   costs; it does not defeat our claim.
                 </p>
               </div>
-              <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-                <h3 class="text-xl font-bold text-[#2A4B7C] mb-3">
+              <div
+                class="border border-slate-700 rounded-xl p-5 bg-slate-900/50"
+              >
+                <h3 class="text-xl font-bold text-white mb-3">
                   Denial of Agreement
                 </h3>
-                <p class="text-gray-600 mb-4">
+                <p class="text-gray-400 mb-4">
                   Defendant will likely deny the existence or the specific terms
                   of the oral agreement.
                 </p>
                 <div
-                  class="flex justify-between items-center text-sm font-semibold"
+                  class="flex justify-between items-center text-sm font-semibold text-gray-300"
                 >
                   <span>Risk to Plaintiff:</span>
-                  <span class="px-3 py-1 rounded-full risk-medium">Medium</span>
+                  <span
+                    class="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-300"
+                    >Medium</span
+                  >
                 </div>
                 <p class="text-xs text-gray-500 mt-2">
                   This is the core of their defence, which we are fully prepared
                   to dismantle with strong corroborating evidence.
                 </p>
               </div>
-              <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-                <h3 class="text-xl font-bold text-[#2A4B7C] mb-3">
+              <div
+                class="border border-slate-700 rounded-xl p-5 bg-slate-900/50"
+              >
+                <h3 class="text-xl font-bold text-white mb-3">
                   Dispute over Performance
                 </h3>
-                <p class="text-gray-600 mb-4">
+                <p class="text-gray-400 mb-4">
                   They will put us to the proof of every delivery, challenging
                   the receipt of goods.
                 </p>
                 <div
-                  class="flex justify-between items-center text-sm font-semibold"
+                  class="flex justify-between items-center text-sm font-semibold text-gray-300"
                 >
                   <span>Risk to Plaintiff:</span>
-                  <span class="px-3 py-1 rounded-full risk-low">Low</span>
+                  <span
+                    class="px-3 py-1 rounded-full bg-green-500/10 text-green-300"
+                    >Low</span
+                  >
                 </div>
                 <p class="text-xs text-gray-500 mt-2">
                   Our signed delivery notes provide a complete and definitive
                   answer to this challenge.
                 </p>
               </div>
-              <div class="border border-gray-200 rounded-xl p-5 bg-gray-50">
-                <h3 class="text-xl font-bold text-[#2A4B7C] mb-3">
+              <div
+                class="border border-slate-700 rounded-xl p-5 bg-slate-900/50"
+              >
+                <h3 class="text-xl font-bold text-white mb-3">
                   Dispute over Quantum
                 </h3>
-                <p class="text-gray-600 mb-4">
+                <p class="text-gray-400 mb-4">
                   Defendant will challenge the calculation of the R446,846.70
                   claim amount.
                 </p>
                 <div
-                  class="flex justify-between items-center text-sm font-semibold"
+                  class="flex justify-between items-center text-sm font-semibold text-gray-300"
                 >
                   <span>Risk to Plaintiff:</span>
-                  <span class="px-3 py-1 rounded-full risk-low">Low</span>
+                  <span
+                    class="px-3 py-1 rounded-full bg-green-500/10 text-green-300"
+                    >Low</span
+                  >
                 </div>
                 <p class="text-xs text-gray-500 mt-2">
                   Our meticulous financial records provide an unassailable,
@@ -518,30 +491,30 @@
 
         <section id="roadmap">
           <div
-            class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-200"
+            class="bg-slate-800 rounded-2xl shadow-xl p-6 md:p-8 border border-slate-700"
           >
             <h2
               class="text-3xl sm:text-4xl font-bold text-center gradient-text mb-2"
             >
               Procedural Roadmap to Success
             </h2>
-            <p class="text-center text-lg text-gray-600 mb-10">
+            <p class="text-center text-lg text-gray-400 mb-10">
               Anticipating the Defendant's moves allows us to control the
               litigation's path.
             </p>
             <div class="relative w-full p-4">
-              <div class="absolute left-6 top-0 h-full w-0.5 bg-gray-200"></div>
+              <div
+                class="absolute left-6 top-0 h-full w-0.5 bg-slate-700"
+              ></div>
 
               <div class="relative pl-16 mb-10">
                 <div
-                  class="absolute left-0 top-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-[#41824a] text-white font-bold text-lg"
+                  class="absolute left-0 top-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-[#41824a] text-white font-bold text-lg border-2 border-slate-700"
                 >
                   1
                 </div>
-                <h3 class="text-xl font-bold text-[#2A4B7C]">
-                  Notice to Defend
-                </h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-bold text-white">Notice to Defend</h3>
+                <p class="text-gray-400">
                   Defendant formally indicates their intention to oppose the
                   action.
                 </p>
@@ -549,35 +522,35 @@
 
               <div class="relative pl-16 mb-10">
                 <div
-                  class="absolute left-0 top-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-[#41824a] text-white font-bold text-lg"
+                  class="absolute left-0 top-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-[#41824a] text-white font-bold text-lg border-2 border-slate-700"
                 >
                   2
                 </div>
-                <h3 class="text-xl font-bold text-[#2A4B7C]">
+                <h3 class="text-xl font-bold text-white">
                   Special Plea (Jurisdiction)
                 </h3>
-                <p class="text-gray-600 mb-4">
+                <p class="text-gray-400 mb-4">
                   Defendant will likely argue the case should be heard
                   elsewhere. This is their strongest preliminary move.
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div class="border-l-4 border-[#2A4B7C] pl-4">
+                  <div class="border-l-4 border-blue-400 pl-4">
                     <h4 class="font-semibold text-[#41824a]">
                       Outcome A: Plea Dismissed
                     </h4>
-                    <p class="text-sm text-gray-600">
+                    <p class="text-sm text-gray-400">
                       The case proceeds on the merits in Gqeberha.
-                      <strong>High probability.</strong>
+                      <strong class="text-gray-300">High probability.</strong>
                     </p>
                   </div>
-                  <div class="border-l-4 border-gray-300 pl-4">
-                    <h4 class="font-semibold text-gray-700">
+                  <div class="border-l-4 border-slate-600 pl-4">
+                    <h4 class="font-semibold text-gray-300">
                       Outcome B: Plea Upheld
                     </h4>
-                    <p class="text-sm text-gray-600">
+                    <p class="text-sm text-gray-400">
                       We re-issue summons in the Western Cape, causing delay but
                       not ending the claim.
-                      <strong>Low probability.</strong>
+                      <strong class="text-gray-300">Low probability.</strong>
                     </p>
                   </div>
                 </div>
@@ -585,14 +558,12 @@
 
               <div class="relative pl-16 mb-10">
                 <div
-                  class="absolute left-0 top-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-[#41824a] text-white font-bold text-lg"
+                  class="absolute left-0 top-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-[#41824a] text-white font-bold text-lg border-2 border-slate-700"
                 >
                   3
                 </div>
-                <h3 class="text-xl font-bold text-[#2A4B7C]">
-                  Plea on the Merits
-                </h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-bold text-white">Plea on the Merits</h3>
+                <p class="text-gray-400">
                   Defendant files their formal defence, denying the agreement,
                   performance, and quantum.
                 </p>
@@ -600,14 +571,12 @@
 
               <div class="relative pl-16">
                 <div
-                  class="absolute left-0 top-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-[#41824a] text-white font-bold text-lg"
+                  class="absolute left-0 top-1.5 flex items-center justify-center w-10 h-10 rounded-full bg-[#41824a] text-white font-bold text-lg border-2 border-slate-700"
                 >
                   4
                 </div>
-                <h3 class="text-xl font-bold text-[#2A4B7C]">
-                  Discovery & Trial
-                </h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-bold text-white">Discovery & Trial</h3>
+                <p class="text-gray-400">
                   Both parties exchange evidence. The matter proceeds to trial
                   where our superior documentary evidence will prevail.
                 </p>
@@ -617,9 +586,9 @@
         </section>
       </main>
 
-      <footer class="text-center mt-16 pt-8 border-t border-gray-200">
+      <footer class="text-center mt-16 pt-8 border-t border-slate-700">
         <p class="font-bold text-2xl gradient-text">Next Steps</p>
-        <p class="text-gray-700 max-w-3xl mx-auto mt-2 leading-relaxed">
+        <p class="text-gray-300 max-w-3xl mx-auto mt-2 leading-relaxed">
           We will immediately issue and serve the summons. Concurrently, we will
           finalise the collation of all evidence to ensure we are prepared to
           dismantle the defence from day one.
@@ -635,20 +604,25 @@
       );
       const contentMerits = document.getElementById("content-merits");
 
+      // Tab switching logic for dark mode
       tabJurisdiction.addEventListener("click", () => {
-        tabJurisdiction.classList.remove("tab-inactive");
-        tabJurisdiction.classList.add("tab-active");
-        tabMerits.classList.remove("tab-active");
-        tabMerits.classList.add("tab-inactive");
+        tabJurisdiction.classList.add("bg-[#41824a]", "text-white");
+        tabJurisdiction.classList.remove("text-gray-300", "hover:bg-slate-700");
+
+        tabMerits.classList.add("text-gray-300", "hover:bg-slate-700");
+        tabMerits.classList.remove("bg-[#41824a]", "text-white");
+
         contentJurisdiction.classList.remove("hidden");
         contentMerits.classList.add("hidden");
       });
 
       tabMerits.addEventListener("click", () => {
-        tabMerits.classList.remove("tab-inactive");
-        tabMerits.classList.add("tab-active");
-        tabJurisdiction.classList.remove("tab-active");
-        tabJurisdiction.classList.add("tab-inactive");
+        tabMerits.classList.add("bg-[#41824a]", "text-white");
+        tabMerits.classList.remove("text-gray-300", "hover:bg-slate-700");
+
+        tabJurisdiction.classList.add("text-gray-300", "hover:bg-slate-700");
+        tabJurisdiction.classList.remove("bg-[#41824a]", "text-white");
+
         contentMerits.classList.remove("hidden");
         contentJurisdiction.classList.add("hidden");
       });
@@ -704,7 +678,7 @@
       // Toggle user menu
       userMenuBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        userMenuContent.classList.toggle("show");
+        userMenuContent.classList.toggle("hidden");
       });
 
       // Close menu when clicking outside
@@ -713,7 +687,7 @@
           !userMenuBtn.contains(e.target) &&
           !userMenuContent.contains(e.target)
         ) {
-          userMenuContent.classList.remove("show");
+          userMenuContent.classList.add("hidden");
         }
       });
 

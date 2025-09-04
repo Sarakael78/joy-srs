@@ -1,0 +1,98 @@
+# Cursor Rules for Joy SRS Project
+
+## Project Overview
+This is a legal strategy infographics platform for Joy Mila Enterprises, built with FastAPI and modern web technologies.
+
+## UI Design Requirements
+
+### Design Philosophy
+- **Clarity:** Interface must be immediately understandable with clear visual hierarchy
+- **Professionalism:** Modern, clean, and serious aesthetic reflecting strategic content
+- **Focus:** Dark theme reduces visual noise and eye strain, making key data stand out
+
+### Color Palette (MANDATORY)
+- **Primary Brand Green:** `#41824A` - Use for buttons, active states, highlights, key conclusions
+- **Accent Blue:** `#2A4B7C` - Use for main titles and gradient effects
+- **Base Background:** `#1E293B` (slate-800) - Main background for all pages
+- **Surface Background:** `#334155` (slate-700) - Content containers and cards
+- **Text Colors:** 
+  - Headings: `#F1F5F9` (slate-100)
+  - Body: `#94A3B8` (slate-400)
+  - Labels: `#94A3B8` (slate-300)
+- **Borders:** `#475569` (slate-600)
+- **Semantic Colors:**
+  - Success/Low Risk: `#22C55E` (green-500)
+  - Warning/Medium Risk: `#FBBF24` (amber-400)
+  - Error/High Risk: `#F87171` (red-400)
+
+### Typography
+- **Font Family:** Inter (from Google Fonts)
+- **Weights:** 400 (normal), 600 (semibold), 700 (bold), 800 (extrabold)
+- **Scale:**
+  - Hero Title: `text-4xl` to `text-6xl`, `font-extrabold`, `text-slate-100`
+  - Section Title: `text-3xl` to `text-4xl`, `font-bold`, `gradient-text`
+  - Card Title: `text-xl` to `text-2xl`, `font-bold`, `text-slate-100`
+  - Body: `text-base` or `text-lg`, `font-normal`, `text-slate-400`
+  - Labels: `text-sm`, `font-medium`, `text-slate-300`
+
+### Layout & Spacing
+- **Base Unit:** 4px (all spacing multiples of this)
+- **Standard Gaps:** `gap-4` (16px), `gap-6` (24px), `gap-8` (32px)
+- **Card Padding:** `p-6` (24px) or `p-8` (32px)
+- **Container Width:** `max-w-7xl` with `mx-auto`
+
+### Core Components
+
+#### Buttons
+- **Primary Action:** `bg-[#41824A]`, `text-white`, `font-semibold`, hover: `bg-green-500`, `scale-105`
+- **Tabs Active:** `bg-[#41824A]`, `text-white`, `font-bold`
+- **Tabs Inactive:** Transparent background, `text-gray-300`, `font-bold`, hover: `bg-slate-700`
+
+#### Form Inputs
+- **Background:** `bg-slate-700/50`
+- **Text:** `text-white`
+- **Placeholder:** `placeholder-gray-400`
+- **Border:** `border-slate-600`
+- **Focus:** `ring-2`, `ring-[#41824A]`, `border-[#41824A]`
+
+#### Cards & Surfaces
+- **Background:** `bg-slate-800` or `bg-slate-800/20` (glassmorphism)
+- **Border:** `border-slate-700` or `border-white/10`
+- **Rounding:** `rounded-2xl` (large), `rounded-xl` (small)
+- **Shadow:** `shadow-xl` or `shadow-2xl`
+
+### Accessibility Requirements
+- **Contrast:** All text must meet WCAG AA contrast ratios
+- **Semantics:** Use proper semantic HTML (`<nav>`, `<main>`, `<button>`, etc.)
+- **Focus States:** All interactive elements must have visible focus states
+- **Labels:** All form inputs must have associated `<label>` elements
+
+## Technical Requirements
+
+### Authentication
+- Use JWT tokens for authentication
+- Store username in localStorage for user menu display
+- Implement role-based access (lawyer vs normal user)
+- User menu should show login name and appropriate options
+
+### File Structure
+- All documentation goes in `docs/` folder
+- Static files in `public/` folder
+- Follow the established FastAPI structure
+
+### Code Style
+- Use Poetry for dependency management
+- Follow PEP 8 for Python code
+- Use TypeScript-like type hints
+- Prefer bash/WSL/Linux shells over PowerShell
+
+## Brand Identity
+- **Company:** Joy Mila Enterprises (Pty) Ltd
+- **Logo:** Use `logo.jpg` from public folder
+- **Professional legal services aesthetic**
+- **Strategic, authoritative tone in all content**
+
+## Documentation
+- All AI-generated documentation must be numbered and placed in `docs/` folder
+- Track progress of codebase evolution through numbered documentation
+- Maintain comprehensive deployment and setup guides
