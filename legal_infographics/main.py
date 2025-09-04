@@ -4,14 +4,17 @@ Main FastAPI application for the Legal Strategy Infographics Platform.
 
 import logging
 import os
+import json
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Dict, Optional
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request, Depends, status
+from fastapi import FastAPI, HTTPException, Request, Depends, status, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from passlib.context import CryptContext
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -19,26 +22,49 @@ logger = logging.getLogger(__name__)
 
 # Security
 security = HTTPBearer()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# Simple API key authentication
-API_KEY = os.getenv("API_KEY", "your-secret-api-key-here")
+# User management
+def get_users() -> Dict[str, str]:
+    """Get users from environment variable."""
+    users_json = os.getenv("USERS", "{}")
+    try:
+        return json.loads(users_json)
+    except json.JSONDecodeError:
+        return {}
 
-def verify_api_key(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    """Verify API key for protected endpoints."""
-    if credentials.credentials != API_KEY:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid API key"
-        )
-    return credentials.credentials
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify a password against its hash."""
+    return pwd_context.verify(plain_password, hashed_password)
 
+def get_password_hash(password: str) -> str:
+    """Hash a password."""
+    return pwd_context.hash(password)
+
+def authenticate_user(username: str, password: str) -> bool:
+    """Authenticate user with username and password."""
+    users = get_users()
+    if username not in users:
+        return False
+    return verify_password(password, users[username])
+
+def create_access_token(username: str) -> str:
+    """Create a simple access token."""
+    # In a real app, you'd use JWT tokens
+    return f"user_{username}_token"
+
+def verify_token(token: str) -> Optional[str]:
+    """Verify a token and return username."""
+    if token.startswith("user_") and token.endswith("_token"):
+        return token[5:-6]  # Extract username from token
+    return None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
     # Startup
     logger.info("Starting Legal Strategy Infographics Platform")
-    logger.info("Running in serverless mode with API key authentication")
+    logger.info("Running in serverless mode with user authentication")
     
     yield
     
@@ -74,6 +100,33 @@ def create_app() -> FastAPI:
             "version": "0.1.0",
             "timestamp": "2024-01-01T00:00:00Z",
         }
+    
+    # Login endpoint
+    @app.post("/auth/login")
+    async def login(username: str = Form(...), password: str = Form(...)):
+        """Authenticate user and return access token."""
+        if authenticate_user(username, password):
+            token = create_access_token(username)
+            logger.info(f"Successful login for user: {username}")
+            return {"access_token": token, "token_type": "bearer", "username": username}
+        else:
+            logger.warning(f"Failed login attempt for user: {username}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username or password"
+            )
+    
+    # Get current user endpoint
+    @app.get("/auth/me")
+    async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+        """Get current authenticated user."""
+        username = verify_token(credentials.credentials)
+        if not username:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token"
+            )
+        return {"username": username}
     
     # Root endpoint - serve infographic (public)
     @app.get("/", response_class=HTMLResponse)
@@ -117,10 +170,17 @@ def create_app() -> FastAPI:
     
     # Protected infographic endpoint
     @app.get("/infographics/", response_class=HTMLResponse)
-    async def protected_infographic(api_key: str = Depends(verify_api_key)):
-        """Serve the infographic HTML file with API key authentication."""
+    async def protected_infographic(credentials: HTTPAuthorizationCredentials = Depends(security)):
+        """Serve the infographic HTML file with user authentication."""
         try:
-            logger.info("Protected infographic accessed with valid API key")
+            username = verify_token(credentials.credentials)
+            if not username:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid token"
+                )
+            
+            logger.info(f"Protected infographic accessed by user: {username}")
             
             infographic_path = Path("public/infographic.html")
             if not infographic_path.exists():
