@@ -134,11 +134,20 @@ def create_app() -> FastAPI:
             )
         return {"username": username}
     
-    # Root endpoint - serve infographic (public)
+    # Root endpoint - serve infographic (protected)
     @app.get("/", response_class=HTMLResponse)
-    async def root():
-        """Serve the main infographic HTML file."""
+    async def root(credentials: HTTPAuthorizationCredentials = Depends(security)):
+        """Serve the main infographic HTML file with authentication."""
         try:
+            username = verify_token(credentials.credentials)
+            if not username:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid token"
+                )
+            
+            logger.info(f"Root infographic accessed by user: {username}")
+            
             infographic_path = Path("public/infographic.html")
             if not infographic_path.exists():
                 raise HTTPException(
@@ -152,26 +161,6 @@ def create_app() -> FastAPI:
             
         except Exception as e:
             logger.error(f"Error serving infographic: {str(e)}")
-            raise HTTPException(status_code=500, detail="Internal server error")
-    
-    # Public infographic endpoint
-    @app.get("/infographics/public", response_class=HTMLResponse)
-    async def public_infographic():
-        """Serve the infographic HTML file without authentication."""
-        try:
-            infographic_path = Path("public/infographic.html")
-            if not infographic_path.exists():
-                raise HTTPException(
-                    status_code=404, detail="Infographic file not found"
-                )
-            
-            with open(infographic_path, "r", encoding="utf-8") as f:
-                html_content = f.read()
-            
-            return HTMLResponse(content=html_content)
-            
-        except Exception as e:
-            logger.error(f"Error serving public infographic: {str(e)}")
             raise HTTPException(status_code=500, detail="Internal server error")
     
     # Protected infographic endpoint

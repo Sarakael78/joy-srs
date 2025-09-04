@@ -8,10 +8,6 @@
   ],
   "routes": [
     {
-      "src": "/infographics/public",
-      "dest": "/legal_infographics/main.py"
-    },
-    {
       "src": "/infographics",
       "dest": "/legal_infographics/main.py"
     },

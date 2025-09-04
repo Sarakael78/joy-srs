@@ -176,23 +176,14 @@ The deployed application includes:
 
 ### 4.3 Accessing the Infographic
 
-#### Public Access:
+#### All Access Requires Authentication:
 
 ```
-https://joy-srs.vercel.app/infographics/public
+https://joy-srs.vercel.app/ (main infographic)
+https://joy-srs.vercel.app/infographics/ (protected infographic)
 ```
 
-#### Protected Access (requires authentication):
-
-```
-https://joy-srs.vercel.app/infographics/
-```
-
-#### Root Access:
-
-```
-https://joy-srs.vercel.app/
-```
+**Note**: All endpoints now require user authentication. No public access is available.
 
 ## Step 5: Testing the Deployment
 

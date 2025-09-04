@@ -65,10 +65,11 @@ joy-srs/
 
 #### Access Points
 
-- **Public Access**: `https://joy-srs.vercel.app/infographics/public` - No authentication required
-- **Protected Access**: `https://joy-srs.vercel.app/infographics/` - Requires JWT token
-- **Root Access**: `https://joy-srs.vercel.app/` - Serves the main infographic
+- **Main Infographic**: `https://joy-srs.vercel.app/` - Requires authentication
+- **Protected Infographic**: `https://joy-srs.vercel.app/infographics/` - Requires authentication
 - **API Documentation**: `https://joy-srs.vercel.app/docs` - Auto-generated Swagger UI
+
+**Note**: All access requires user authentication. No public endpoints are available.
 
 ### 📋 Files Created/Modified
 
@@ -119,9 +120,8 @@ All deployment tests pass:
    - See `docs/01-vercel-deployment-guide.md`
 
 3. **Access your infographic**:
-   - Public: `https://joy-srs.vercel.app/infographics/public`
-   - Protected: `https://joy-srs.vercel.app/infographics/`
-   - Root: `https://joy-srs.vercel.app/`
+   - Main: `https://joy-srs.vercel.app/` (requires authentication)
+   - Protected: `https://joy-srs.vercel.app/infographics/` (requires authentication)
 
 ### 🔧 Customization Options
 
