@@ -156,15 +156,73 @@ def create_app() -> FastAPI:
     
     # Root endpoint - serve infographic (protected)
     @app.get("/", response_class=HTMLResponse)
-    async def root(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    async def root(request: Request):
         """Serve the main infographic HTML file with authentication."""
         try:
-            username = verify_token(credentials.credentials)
+            # Check for token in Authorization header or query parameter
+            auth_header = request.headers.get("authorization")
+            token = None
+            
+            if auth_header and auth_header.startswith("Bearer "):
+                token = auth_header[7:]  # Remove "Bearer " prefix
+            else:
+                # Check for token in query parameter (for simple redirects)
+                token = request.query_params.get("token")
+            
+            if not token:
+                # No valid token, redirect to login
+                return HTMLResponse(content="""
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Redirecting to Login</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+                        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                    </style>
+                </head>
+                <body>
+                    <h2>Authentication Required</h2>
+                    <div class="spinner"></div>
+                    <p>Redirecting to login page...</p>
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = '/login';
+                        }, 1000);
+                    </script>
+                </body>
+                </html>
+                """)
+            
+            username = verify_token(token)
             if not username:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid token"
-                )
+                # Invalid token, redirect to login
+                return HTMLResponse(content="""
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Redirecting to Login</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+                        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                    </style>
+                </head>
+                <body>
+                    <h2>Invalid Token</h2>
+                    <div class="spinner"></div>
+                    <p>Redirecting to login page...</p>
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = '/login';
+                        }, 1000);
+                    </script>
+                </body>
+                </html>
+                """)
             
             logger.info(f"Root infographic accessed by user: {username}")
             

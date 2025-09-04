@@ -17,6 +17,39 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
       rel="stylesheet"
     />
+    <script>
+      // Simple authentication check
+      (function() {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          // Redirect to login if no token
+          window.location.href = '/login';
+          return;
+        }
+        
+        // Add token to current page request
+        const currentUrl = window.location.href;
+        if (currentUrl === window.location.origin + '/' || currentUrl === window.location.origin + '/infographics/') {
+          // Reload the page with the authorization header
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', window.location.href, true);
+          xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+          xhr.onload = function() {
+            if (xhr.status === 200) {
+              document.open();
+              document.write(xhr.responseText);
+              document.close();
+            } else {
+              window.location.href = '/login';
+            }
+          };
+          xhr.onerror = function() {
+            window.location.href = '/login';
+          };
+          xhr.send();
+        }
+      })();
+    </script>
     <style>
       body {
         font-family: "Inter", sans-serif;
