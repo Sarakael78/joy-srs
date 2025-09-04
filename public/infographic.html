@@ -103,15 +103,86 @@
         background-color: #ffc107;
         color: #333333;
       }
+      .user-menu {
+        position: relative;
+        display: inline-block;
+      }
+      .user-menu-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #ffffff;
+        min-width: 200px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        z-index: 1000;
+      }
+      .user-menu-content.show {
+        display: block;
+      }
+      .user-menu-item {
+        color: #333333;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background-color 0.2s;
+      }
+      .user-menu-item:hover {
+        background-color: #f9fafb;
+      }
+      .user-menu-item:last-child {
+        border-bottom: none;
+      }
+      .user-menu-item.danger {
+        color: #dc2626;
+      }
+      .user-menu-item.danger:hover {
+        background-color: #fef2f2;
+      }
     </style>
   </head>
   <body class="antialiased">
     <div class="container mx-auto px-4 py-8 md:py-12">
+      <!-- User Menu -->
+      <div class="absolute top-4 right-4 z-50">
+        <div class="user-menu">
+          <button id="userMenuBtn" class="bg-white p-3 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+            <svg class="w-6 h-6 text-[#41824A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </button>
+          <div id="userMenuContent" class="user-menu-content">
+            <div class="user-menu-item" id="userInfo">
+              <div class="font-semibold text-[#41824A]">Welcome</div>
+              <div class="text-sm text-gray-600" id="userName">User</div>
+            </div>
+            <a href="#" class="user-menu-item" id="documentsLink" style="display: none;">
+              <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Documents Library
+              </div>
+            </a>
+            <a href="#" class="user-menu-item danger" id="logoutBtn">
+              <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Log Out
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
       <header class="text-center mb-12 md:mb-16">
         <div class="flex justify-center items-center mb-6">
           <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
             <img
-              src="/logo.jpg"
+              src="logo.jpg"
               alt="Joy Mila Enterprises Logo"
               class="h-16 w-auto mx-auto"
             />
@@ -640,6 +711,72 @@
         contentMerits.classList.remove("hidden");
         contentJurisdiction.classList.add("hidden");
       });
+
+      // User Menu Functionality
+      const userMenuBtn = document.getElementById("userMenuBtn");
+      const userMenuContent = document.getElementById("userMenuContent");
+      const documentsLink = document.getElementById("documentsLink");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const userName = document.getElementById("userName");
+
+      // Get user info from localStorage or token
+      function getUserInfo() {
+        const token = localStorage.getItem("authToken");
+        if (token) {
+          try {
+            // Decode JWT token to get user info (this is a simplified version)
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return {
+              name: payload.name || payload.username || "User",
+              role: payload.role || "user"
+            };
+          } catch (e) {
+            return { name: "User", role: "user" };
+          }
+        }
+        return { name: "User", role: "user" };
+      }
+
+      // Initialize user menu
+      function initUserMenu() {
+        const userInfo = getUserInfo();
+        userName.textContent = userInfo.name;
+
+        // Show documents link for lawyers
+        if (userInfo.role === "lawyer" || userInfo.role === "attorney") {
+          documentsLink.style.display = "block";
+        }
+      }
+
+      // Toggle user menu
+      userMenuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        userMenuContent.classList.toggle("show");
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!userMenuBtn.contains(e.target) && !userMenuContent.contains(e.target)) {
+          userMenuContent.classList.remove("show");
+        }
+      });
+
+      // Documents Library link
+      documentsLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        // Redirect to documents library page
+        window.location.href = "/documents";
+      });
+
+      // Logout functionality
+      logoutBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("authToken");
+        window.location.href = "/login";
+      });
+
+      // Initialize user menu on page load
+      initUserMenu();
     </script>
   </body>
 </html>

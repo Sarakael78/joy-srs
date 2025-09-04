@@ -48,6 +48,10 @@
             "dest": "/legal_infographics/main.py"
           },
           {
+            "src": "/logo.jpg",
+            "dest": "/legal_infographics/main.py"
+          },
+          {
             "src": "/(.*)",
             "dest": "/legal_infographics/main.py"
           }

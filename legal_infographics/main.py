@@ -12,7 +12,7 @@ from typing import Dict, Optional
 import uvicorn
 from fastapi import FastAPI, HTTPException, Request, Depends, status, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import hashlib
 
@@ -379,6 +379,31 @@ def create_app() -> FastAPI:
             
         except Exception as e:
             logger.error(f"Error serving protected infographic: {str(e)}")
+            raise HTTPException(status_code=500, detail="Internal server error")
+    
+    # Static file serving
+    @app.get("/{filename:path}")
+    async def serve_static_files(filename: str):
+        """Serve static files from the public directory."""
+        try:
+            file_path = Path("public") / filename
+            if not file_path.exists():
+                raise HTTPException(
+                    status_code=404, detail="File not found"
+                )
+            
+            # Only serve files from the public directory
+            if not str(file_path).startswith(str(Path("public"))):
+                raise HTTPException(
+                    status_code=403, detail="Access denied"
+                )
+            
+            return FileResponse(file_path)
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error serving static file {filename}: {str(e)}")
             raise HTTPException(status_code=500, detail="Internal server error")
     
     # Global exception handler
