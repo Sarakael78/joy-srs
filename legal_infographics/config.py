@@ -10,7 +10,7 @@ from pydantic_settings import BaseSettings
 class DatabaseSettings(BaseSettings):
     """Database configuration settings."""
     
-    url: str = Field(..., env="DATABASE_URL")
+    url: Optional[str] = Field(default=None, env="DATABASE_URL")
     pool_size: int = Field(default=10, env="DATABASE_POOL_SIZE")
     max_overflow: int = Field(default=20, env="DATABASE_MAX_OVERFLOW")
     pool_timeout: int = Field(default=30, env="DATABASE_POOL_TIMEOUT")
@@ -23,7 +23,7 @@ class DatabaseSettings(BaseSettings):
 class RedisSettings(BaseSettings):
     """Redis configuration settings."""
     
-    url: str = Field(..., env="REDIS_URL")
+    url: Optional[str] = Field(default=None, env="REDIS_URL")
     pool_size: int = Field(default=10, env="REDIS_POOL_SIZE")
     socket_timeout: int = Field(default=5, env="REDIS_SOCKET_TIMEOUT")
     socket_connect_timeout: int = Field(default=5, env="REDIS_SOCKET_CONNECT_TIMEOUT")
@@ -35,7 +35,7 @@ class RedisSettings(BaseSettings):
 class SecuritySettings(BaseSettings):
     """Security configuration settings."""
     
-    secret_key: str = Field(..., env="SECRET_KEY")
+    secret_key: Optional[str] = Field(default=None, env="SECRET_KEY")
     algorithm: str = Field(default="HS256", env="ALGORITHM")
     access_token_expire_minutes: int = Field(default=30, env="ACCESS_TOKEN_EXPIRE_MINUTES")
     refresh_token_expire_days: int = Field(default=7, env="REFRESH_TOKEN_EXPIRE_DAYS")
@@ -46,7 +46,7 @@ class SecuritySettings(BaseSettings):
     
     @validator("secret_key")
     def validate_secret_key(cls, v: str) -> str:
-        if len(v) < 32:
+        if v and len(v) < 32:
             raise ValueError("Secret key must be at least 32 characters long")
         return v
     
@@ -57,12 +57,12 @@ class SecuritySettings(BaseSettings):
 class EmailSettings(BaseSettings):
     """Email configuration settings."""
     
-    host: str = Field(..., env="SMTP_HOST")
+    host: Optional[str] = Field(default=None, env="SMTP_HOST")
     port: int = Field(default=587, env="SMTP_PORT")
-    username: str = Field(..., env="SMTP_USER")
-    password: str = Field(..., env="SMTP_PASSWORD")
+    username: Optional[str] = Field(default=None, env="SMTP_USER")
+    password: Optional[str] = Field(default=None, env="SMTP_PASSWORD")
     use_tls: bool = Field(default=True, env="SMTP_USE_TLS")
-    from_email: str = Field(..., env="SMTP_FROM_EMAIL")
+    from_email: Optional[str] = Field(default=None, env="SMTP_FROM_EMAIL")
     
     class Config:
         env_prefix = "SMTP_"
