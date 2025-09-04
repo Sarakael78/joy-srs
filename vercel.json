@@ -12,7 +12,7 @@
             "dest": "/legal_infographics/main.py"
           },
           {
-            "src": "/infographics",
+            "src": "/infographic",
             "dest": "/legal_infographics/main.py"
           },
           {

@@ -154,10 +154,76 @@ def create_app() -> FastAPI:
             logger.error(f"Error serving login page: {str(e)}")
             raise HTTPException(status_code=500, detail="Internal server error")
     
-    # Root endpoint - serve infographic (protected)
+    # Root endpoint - redirect to login if not authenticated
     @app.get("/", response_class=HTMLResponse)
     async def root(request: Request):
-        """Serve the main infographic HTML file with authentication."""
+        """Redirect to login page if not authenticated."""
+        return HTMLResponse(content="""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Redirecting to Login</title>
+            <style>
+                body { 
+                    font-family: 'Inter', Arial, sans-serif; 
+                    text-align: center; 
+                    padding: 50px; 
+                    background-color: #f9fafb;
+                    color: #1a3a5a;
+                }
+                .container {
+                    max-width: 400px;
+                    margin: 0 auto;
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 10px;
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                    border: 2px solid #4a7a9a;
+                }
+                h2 { 
+                    color: #1a3a5a; 
+                    margin-bottom: 1rem;
+                    font-weight: 600;
+                }
+                .spinner { 
+                    border: 3px solid #f3f3f3; 
+                    border-top: 3px solid #4a7a9a; 
+                    border-radius: 50%; 
+                    width: 30px; 
+                    height: 30px; 
+                    animation: spin 1s linear infinite; 
+                    margin: 20px auto; 
+                }
+                @keyframes spin { 
+                    0% { transform: rotate(0deg); } 
+                    100% { transform: rotate(360deg); } 
+                }
+                p { 
+                    color: #4a7a9a; 
+                    margin-bottom: 1rem;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>🔐 Authentication Required</h2>
+                <div class="spinner"></div>
+                <p>Redirecting to login page...</p>
+                <script>
+                    setTimeout(function() {
+                        window.location.href = '/login';
+                    }, 1500);
+                </script>
+            </div>
+        </body>
+        </html>
+        """)
+    
+    # Protected infographic endpoint
+    @app.get("/infographic", response_class=HTMLResponse)
+    async def protected_infographic(request: Request):
+        """Serve the infographic HTML file with user authentication."""
         try:
             # Check for token in Authorization header or query parameter
             auth_header = request.headers.get("authorization")
@@ -178,20 +244,57 @@ def create_app() -> FastAPI:
                     <meta charset="UTF-8">
                     <title>Redirecting to Login</title>
                     <style>
-                        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-                        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
-                        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                        body { 
+                            font-family: 'Inter', Arial, sans-serif; 
+                            text-align: center; 
+                            padding: 50px; 
+                            background-color: #f9fafb;
+                            color: #1a3a5a;
+                        }
+                        .container {
+                            max-width: 400px;
+                            margin: 0 auto;
+                            background: white;
+                            padding: 2rem;
+                            border-radius: 10px;
+                            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                            border: 2px solid #4a7a9a;
+                        }
+                        h2 { 
+                            color: #1a3a5a; 
+                            margin-bottom: 1rem;
+                            font-weight: 600;
+                        }
+                        .spinner { 
+                            border: 3px solid #f3f3f3; 
+                            border-top: 3px solid #4a7a9a; 
+                            border-radius: 50%; 
+                            width: 30px; 
+                            height: 30px; 
+                            animation: spin 1s linear infinite; 
+                            margin: 20px auto; 
+                        }
+                        @keyframes spin { 
+                            0% { transform: rotate(0deg); } 
+                            100% { transform: rotate(360deg); } 
+                        }
+                        p { 
+                            color: #4a7a9a; 
+                            margin-bottom: 1rem;
+                        }
                     </style>
                 </head>
                 <body>
-                    <h2>Authentication Required</h2>
-                    <div class="spinner"></div>
-                    <p>Redirecting to login page...</p>
-                    <script>
-                        setTimeout(function() {
-                            window.location.href = '/login';
-                        }, 1000);
-                    </script>
+                    <div class="container">
+                        <h2>🔐 Authentication Required</h2>
+                        <div class="spinner"></div>
+                        <p>Redirecting to login page...</p>
+                        <script>
+                            setTimeout(function() {
+                                window.location.href = '/login';
+                            }, 1500);
+                        </script>
+                    </div>
                 </body>
                 </html>
                 """)
@@ -206,52 +309,60 @@ def create_app() -> FastAPI:
                     <meta charset="UTF-8">
                     <title>Redirecting to Login</title>
                     <style>
-                        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-                        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
-                        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                        body { 
+                            font-family: 'Inter', Arial, sans-serif; 
+                            text-align: center; 
+                            padding: 50px; 
+                            background-color: #f9fafb;
+                            color: #1a3a5a;
+                        }
+                        .container {
+                            max-width: 400px;
+                            margin: 0 auto;
+                            background: white;
+                            padding: 2rem;
+                            border-radius: 10px;
+                            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                            border: 2px solid #4a7a9a;
+                        }
+                        h2 { 
+                            color: #1a3a5a; 
+                            margin-bottom: 1rem;
+                            font-weight: 600;
+                        }
+                        .spinner { 
+                            border: 3px solid #f3f3f3; 
+                            border-top: 3px solid #4a7a9a; 
+                            border-radius: 50%; 
+                            width: 30px; 
+                            height: 30px; 
+                            animation: spin 1s linear infinite; 
+                            margin: 20px auto; 
+                        }
+                        @keyframes spin { 
+                            0% { transform: rotate(0deg); } 
+                            100% { transform: rotate(360deg); } 
+                        }
+                        p { 
+                            color: #4a7a9a; 
+                            margin-bottom: 1rem;
+                        }
                     </style>
                 </head>
                 <body>
-                    <h2>Invalid Token</h2>
-                    <div class="spinner"></div>
-                    <p>Redirecting to login page...</p>
-                    <script>
-                        setTimeout(function() {
-                            window.location.href = '/login';
-                        }, 1000);
-                    </script>
+                    <div class="container">
+                        <h2>🔐 Invalid Token</h2>
+                        <div class="spinner"></div>
+                        <p>Redirecting to login page...</p>
+                        <script>
+                            setTimeout(function() {
+                                window.location.href = '/login';
+                            }, 1500);
+                        </script>
+                    </div>
                 </body>
                 </html>
                 """)
-            
-            logger.info(f"Root infographic accessed by user: {username}")
-            
-            infographic_path = Path("public/infographic.html")
-            if not infographic_path.exists():
-                raise HTTPException(
-                    status_code=404, detail="Infographic file not found"
-                )
-            
-            with open(infographic_path, "r", encoding="utf-8") as f:
-                html_content = f.read()
-            
-            return HTMLResponse(content=html_content)
-            
-        except Exception as e:
-            logger.error(f"Error serving infographic: {str(e)}")
-            raise HTTPException(status_code=500, detail="Internal server error")
-    
-    # Protected infographic endpoint
-    @app.get("/infographics/", response_class=HTMLResponse)
-    async def protected_infographic(credentials: HTTPAuthorizationCredentials = Depends(security)):
-        """Serve the infographic HTML file with user authentication."""
-        try:
-            username = verify_token(credentials.credentials)
-            if not username:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid token"
-                )
             
             logger.info(f"Protected infographic accessed by user: {username}")
             
