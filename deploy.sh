@@ -147,13 +147,35 @@ push_to_github() {
     # Get current branch
     current_branch=$(git branch --show-current)
     
-    # Push to GitHub
+    # Try to push to GitHub
     if git push -u origin "$current_branch"; then
         print_success "Successfully pushed to GitHub"
     else
-        print_error "Failed to push to GitHub"
-        echo "Please check your GitHub credentials and try again"
-        exit 1
+        print_warning "Failed to push to GitHub - repository may not exist"
+        print_status "Attempting to create GitHub repository..."
+        
+        # Check if GitHub CLI is available
+        if ! command -v gh &> /dev/null; then
+            print_error "GitHub CLI (gh) not found. Please install it or create the repository manually."
+            echo "Install with: sudo apt install gh"
+            exit 1
+        fi
+        
+        # Check if user is authenticated
+        if ! gh auth status &> /dev/null; then
+            print_warning "GitHub CLI not authenticated. Please login first:"
+            echo "  gh auth login"
+            exit 1
+        fi
+        
+        # Create the repository
+        if gh repo create Sarakael78/joy-srs --public --source=. --remote=origin --push; then
+            print_success "Successfully created and pushed to GitHub repository"
+        else
+            print_error "Failed to create GitHub repository"
+            echo "Please create the repository manually at: https://github.com/Sarakael78/joy-srs"
+            exit 1
+        fi
     fi
 }
 
