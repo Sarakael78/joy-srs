@@ -36,23 +36,27 @@ A secure, enterprise-grade platform for displaying legal strategy infographics t
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
-   git clone <repository-url>
-   cd legal-strategy-infographics
+   git clone https://github.com/Sarakael78/joy-srs.git
+   cd joy-srs
    ```
 
 2. **Install dependencies**
+
    ```bash
    poetry install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
    ```
 
 4. **Initialize database**
+
    ```bash
    poetry run alembic upgrade head
    ```
@@ -176,15 +180,35 @@ poetry run alembic upgrade head
 poetry run alembic downgrade -1
 ```
 
-## 🐳 Docker Deployment
+## 🚀 Deployment Options
 
-### Build and run with Docker Compose
+### Vercel Deployment (Recommended)
+
+Deploy your infographic to Vercel with the security framework:
+
+```bash
+# Run the deployment script
+./deploy.sh
+```
+
+This will:
+
+- Check all required files
+- Set up Git repository
+- Push to GitHub
+- Guide you through Vercel configuration
+
+For detailed instructions, see [docs/01-vercel-deployment-guide.md](docs/01-vercel-deployment-guide.md)
+
+### Docker Deployment
+
+#### Build and run with Docker Compose
 
 ```bash
 docker-compose up -d
 ```
 
-### Production deployment
+#### Production deployment
 
 ```bash
 # Build production image
@@ -237,6 +261,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Support
 
 For support and questions:
+
 - Email: support@legal-infographics.com
 - Documentation: https://docs.legal-infographics.com
 - Issues: GitHub Issues page

@@ -1,0 +1,59 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "legal_infographics/main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/infographics/public",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/infographics",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/cases/(.*)",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/users/(.*)",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/audit/(.*)",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/health",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/metrics",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/docs",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/openapi.json",
+      "dest": "/legal_infographics/main.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/legal_infographics/main.py"
+    }
+  ],
+  "env": {
+    "PYTHONPATH": ".",
+    "DEBUG": "false"
+  }
+}
