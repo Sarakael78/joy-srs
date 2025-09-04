@@ -18,20 +18,20 @@
     </style>
   </head>
   <body
-    class="antialiased bg-gray-100 flex items-center justify-center min-h-screen"
+    class="antialiased bg-gray-900 flex items-center justify-center min-h-screen"
   >
     <div
       class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#2A4B7C] to-[#41824a]"
     ></div>
 
     <div
-      class="relative bg-white/20 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-white/30 w-full max-w-md mx-4"
+      class="relative bg-gray-800/90 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-gray-600 w-full max-w-md mx-4"
     >
       <div class="text-center mb-8">
         <img
           src="logo.jpg"
           alt="Joy Mila Enterprises Logo"
-          class="h-16 w-auto mx-auto mb-4 bg-white p-2 rounded-lg shadow-md"
+          class="h-16 w-auto mx-auto mb-4 bg-gray-700 p-2 rounded-lg shadow-md"
         />
         <h1 class="text-3xl font-bold text-white tracking-tight">
           Strategic Dashboard
@@ -62,7 +62,7 @@
             id="username"
             name="username"
             required
-            class="w-full px-4 py-2.5 bg-white/30 text-white placeholder-white/60 border border-white/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/80 transition-all"
+            class="w-full px-4 py-2.5 bg-gray-700 text-white placeholder-gray-400 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#41824A] transition-all"
             placeholder="your.username"
           />
         </div>
@@ -78,14 +78,14 @@
             id="password"
             name="password"
             required
-            class="w-full px-4 py-2.5 bg-white/30 text-white placeholder-white/60 border border-white/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/80 transition-all"
+            class="w-full px-4 py-2.5 bg-gray-700 text-white placeholder-gray-400 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#41824A] transition-all"
             placeholder="••••••••"
           />
         </div>
 
         <button
           type="submit"
-          class="w-full py-3 px-4 bg-white text-[#41824a] font-semibold rounded-lg shadow-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/80 focus:ring-offset-[#41824a] transition-all transform hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+          class="w-full py-3 px-4 bg-[#41824a] text-white font-semibold rounded-lg shadow-lg hover:bg-[#2d5a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#41824a] focus:ring-offset-gray-800 transition-all transform hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
           id="loginBtn"
         >
           Sign In
@@ -127,10 +127,11 @@
               const data = await response.json();
               const token = data.access_token;
 
-              // Store token and redirect with token as query parameter
+              // Store token and username, then redirect
               localStorage.setItem("authToken", token);
+              localStorage.setItem("username", username);
               window.location.href =
-                "/infographic?token=" + encodeURIComponent(token);
+                "/infographic?token=" + encodeURIComponent(token) + "&username=" + encodeURIComponent(username);
             } else {
               const errorData = await response.json();
               errorMessage.textContent =
