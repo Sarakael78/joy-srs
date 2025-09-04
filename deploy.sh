@@ -202,7 +202,7 @@ show_next_steps() {
     echo "5. Configure the following settings:"
     echo "   - Framework Preset: Other"
     echo "   - Build Command: pip install -r requirements.txt"
-    echo "   - Output Directory: ."
+    echo "   - Output Directory: (leave empty - Vercel will auto-detect)"
     echo "   - Install Command: pip install -r requirements.txt"
     echo ""
     echo "6. Add environment variables in Vercel:"

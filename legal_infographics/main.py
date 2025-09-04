@@ -43,9 +43,10 @@ async def lifespan(app: FastAPI):
         logger.info("Database initialized successfully")
     except Exception as e:
         logger.warning(f"Database initialization failed: {e}")
-
+        logger.info("Running in serverless mode without database")
+    
     yield
-
+    
     # Shutdown
     logger.info("Shutting down Legal Strategy Infographics Platform")
 

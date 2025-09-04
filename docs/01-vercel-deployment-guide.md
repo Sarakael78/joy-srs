@@ -124,8 +124,10 @@ git push -u origin main
 
 - **Framework Preset**: Other
 - **Build Command**: `pip install -r requirements.txt`
-- **Output Directory**: `.`
+- **Output Directory**: (leave empty - Vercel will auto-detect from vercel.json)
 - **Install Command**: `pip install -r requirements.txt`
+
+**Note**: The `vercel.json` file already contains the correct configuration for FastAPI deployment.
 
 #### Environment Variables:
 
