@@ -169,26 +169,26 @@ def create_app() -> FastAPI:
                     font-family: 'Inter', Arial, sans-serif; 
                     text-align: center; 
                     padding: 50px; 
-                    background-color: #f9fafb;
-                    color: #1a3a5a;
+                    background-color: #1E293B;
+                    color: #F1F5F9;
                 }
                 .container {
                     max-width: 400px;
                     margin: 0 auto;
-                    background: white;
+                    background: #334155;
                     padding: 2rem;
-                    border-radius: 10px;
-                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-                    border: 2px solid #4a7a9a;
+                    border-radius: 16px;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                    border: 1px solid #475569;
                 }
                 h2 { 
-                    color: #1a3a5a; 
+                    color: #F1F5F9; 
                     margin-bottom: 1rem;
                     font-weight: 600;
                 }
                 .spinner { 
-                    border: 3px solid #f3f3f3; 
-                    border-top: 3px solid #4a7a9a; 
+                    border: 3px solid #475569; 
+                    border-top: 3px solid #41824A; 
                     border-radius: 50%; 
                     width: 30px; 
                     height: 30px; 
@@ -200,7 +200,7 @@ def create_app() -> FastAPI:
                     100% { transform: rotate(360deg); } 
                 }
                 p { 
-                    color: #4a7a9a; 
+                    color: #94A3B8; 
                     margin-bottom: 1rem;
                 }
             </style>
@@ -248,26 +248,26 @@ def create_app() -> FastAPI:
                             font-family: 'Inter', Arial, sans-serif; 
                             text-align: center; 
                             padding: 50px; 
-                            background-color: #111827;
-                            color: #1a3a5a;
+                            background-color: #1E293B;
+                            color: #F1F5F9;
                         }
                         .container {
                             max-width: 400px;
                             margin: 0 auto;
-                            background: white;
+                            background: #334155;
                             padding: 2rem;
-                            border-radius: 10px;
-                            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-                            border: 2px solid #4a7a9a;
+                            border-radius: 16px;
+                            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                            border: 1px solid #475569;
                         }
                         h2 { 
-                            color: #1a3a5a; 
+                            color: #F1F5F9; 
                             margin-bottom: 1rem;
                             font-weight: 600;
                         }
                         .spinner { 
-                            border: 3px solid #f3f3f3; 
-                            border-top: 3px solid #4a7a9a; 
+                            border: 3px solid #475569; 
+                            border-top: 3px solid #41824A; 
                             border-radius: 50%; 
                             width: 30px; 
                             height: 30px; 
@@ -279,7 +279,7 @@ def create_app() -> FastAPI:
                             100% { transform: rotate(360deg); } 
                         }
                         p { 
-                            color: #4a7a9a; 
+                            color: #94A3B8; 
                             margin-bottom: 1rem;
                         }
                     </style>
@@ -313,26 +313,26 @@ def create_app() -> FastAPI:
                             font-family: 'Inter', Arial, sans-serif; 
                             text-align: center; 
                             padding: 50px; 
-                            background-color: #111827;
-                            color: #1a3a5a;
+                            background-color: #1E293B;
+                            color: #F1F5F9;
                         }
                         .container {
                             max-width: 400px;
                             margin: 0 auto;
-                            background: white;
+                            background: #334155;
                             padding: 2rem;
-                            border-radius: 10px;
-                            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-                            border: 2px solid #4a7a9a;
+                            border-radius: 16px;
+                            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                            border: 1px solid #475569;
                         }
                         h2 { 
-                            color: #1a3a5a; 
+                            color: #F1F5F9; 
                             margin-bottom: 1rem;
                             font-weight: 600;
                         }
                         .spinner { 
-                            border: 3px solid #f3f3f3; 
-                            border-top: 3px solid #4a7a9a; 
+                            border: 3px solid #475569; 
+                            border-top: 3px solid #41824A; 
                             border-radius: 50%; 
                             width: 30px; 
                             height: 30px; 
@@ -344,7 +344,7 @@ def create_app() -> FastAPI:
                             100% { transform: rotate(360deg); } 
                         }
                         p { 
-                            color: #4a7a9a; 
+                            color: #94A3B8; 
                             margin-bottom: 1rem;
                         }
                     </style>
