@@ -14,7 +14,7 @@ from fastapi import FastAPI, HTTPException, Request, Depends, status, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from passlib.context import CryptContext
+import hashlib
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -22,7 +22,6 @@ logger = logging.getLogger(__name__)
 
 # Security
 security = HTTPBearer()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # User management
 def get_users() -> Dict[str, str]:
@@ -35,11 +34,18 @@ def get_users() -> Dict[str, str]:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against its hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        salt, hash_value = hashed_password.split('$')
+        computed_hash = hashlib.sha256((plain_password + salt).encode()).hexdigest()
+        return computed_hash == hash_value
+    except:
+        return False
 
 def get_password_hash(password: str) -> str:
     """Hash a password."""
-    return pwd_context.hash(password)
+    salt = os.urandom(16).hex()
+    hashed = hashlib.sha256((password + salt).encode()).hexdigest()
+    return f"{salt}${hashed}"
 
 def authenticate_user(username: str, password: str) -> bool:
     """Authenticate user with username and password."""

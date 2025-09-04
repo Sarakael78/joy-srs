@@ -4,15 +4,23 @@ Script to create users and generate the USERS environment variable for Vercel.
 """
 
 import json
-import sys
-from passlib.context import CryptContext
-
-# Password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import hashlib
+import os
 
 def hash_password(password: str) -> str:
-    """Hash a password."""
-    return pwd_context.hash(password)
+    """Hash a password using SHA-256 with salt."""
+    salt = os.urandom(16).hex()
+    hashed = hashlib.sha256((password + salt).encode()).hexdigest()
+    return f"{salt}${hashed}"
+
+def verify_password(password: str, hashed_password: str) -> bool:
+    """Verify a password against its hash."""
+    try:
+        salt, hash_value = hashed_password.split('$')
+        computed_hash = hashlib.sha256((password + salt).encode()).hexdigest()
+        return computed_hash == hash_value
+    except:
+        return False
 
 def create_users():
     """Create users interactively."""
@@ -79,7 +87,7 @@ def create_users():
     with open("users_config.json", "w") as f:
         json.dump(users, f, indent=2)
     
-    print(f"\n💾 User configuration saved to: users_config.json")
+    print("\n💾 User configuration saved to: users_config.json")
 
 if __name__ == "__main__":
     create_users()
