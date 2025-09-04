@@ -233,9 +233,9 @@
                     const data = await response.json();
                     const token = data.access_token;
                     
-                    // Store token and redirect immediately
+                    // Store token and redirect with token as query parameter
                     localStorage.setItem('authToken', token);
-                    window.location.href = '/infographic';
+                    window.location.href = '/infographic?token=' + encodeURIComponent(token);
                     
                 } else {
                     const errorData = await response.json();
@@ -253,11 +253,7 @@
             }
         });
         
-        function accessInfographic(token) {
-            // Store token and redirect to infographic
-            localStorage.setItem('authToken', token);
-            window.location.href = '/';
-        }
+
         
         // Check if we have a stored token
         window.addEventListener('load', function() {
@@ -267,7 +263,7 @@
                 successMessage.innerHTML = `
                     <strong>🔑 Token found!</strong><br>
                     <strong>Token:</strong> ${storedToken}<br><br>
-                    <button onclick="accessInfographic('${storedToken}')" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 3px; cursor: pointer;">
+                    <button onclick="window.location.href='/infographic?token=' + encodeURIComponent('${storedToken}')" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 3px; cursor: pointer;">
                         Access Infographic
                     </button>
                 `;
