@@ -74,20 +74,12 @@ check_remote() {
     
     if ! git remote get-url origin >/dev/null 2>&1; then
         print_warning "No remote origin found"
-        echo "Please add your GitHub repository as remote origin:"
-        echo "  git remote add origin https://github.com/Sarakael78/joy-srs.git"
-        echo ""
-        read -p "Enter your GitHub repository URL: " github_url
-        
-        if [[ -n "$github_url" ]]; then
-            git remote add origin "$github_url"
-            print_success "Remote origin added: $github_url"
-        else
-            print_error "No GitHub URL provided. Please add remote manually."
-            exit 1
-        fi
+        echo "Adding remote origin: https://github.com/Sarakael78/joy-srs.git"
+        git remote add origin "https://github.com/Sarakael78/joy-srs.git"
+        print_success "Remote origin added: https://github.com/Sarakael78/joy-srs.git"
     else
-        print_success "Remote origin already configured"
+        current_remote=$(git remote get-url origin)
+        print_success "Remote origin already configured: $current_remote"
     fi
 }
 
