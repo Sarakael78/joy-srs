@@ -248,7 +248,7 @@ def create_app() -> FastAPI:
                             font-family: 'Inter', Arial, sans-serif; 
                             text-align: center; 
                             padding: 50px; 
-                            background-color: #f9fafb;
+                            background-color: #111827;
                             color: #1a3a5a;
                         }
                         .container {
@@ -313,7 +313,7 @@ def create_app() -> FastAPI:
                             font-family: 'Inter', Arial, sans-serif; 
                             text-align: center; 
                             padding: 50px; 
-                            background-color: #f9fafb;
+                            background-color: #111827;
                             color: #1a3a5a;
                         }
                         .container {
